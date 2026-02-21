@@ -1,332 +1,781 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secure Social Vault</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Vault Pro | Password Manager</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+            z-index: 0;
+        }
 
-<style>
+        @keyframes moveBackground {
+            0% { transform: translate(-10%, -10%) rotate(0deg); }
+            100% { transform: translate(10%, 10%) rotate(10deg); }
+        }
 
-body{
-margin:0;
-font-family:Poppins;
-background: linear-gradient(135deg,#020024,#090979,#00d4ff);
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-}
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            z-index: 1;
+        }
 
-/* Card */
+        /* Glass Card Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 35px 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            animation: slideUp 0.5s ease;
+        }
 
-.card{
-background: rgba(255,255,255,0.08);
-backdrop-filter: blur(15px);
-padding:30px;
-border-radius:25px;
-width:420px;
-text-align:center;
-animation: fadeIn 0.6s;
-}
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-/* Icons Grid */
+        /* Headers */
+        h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #fff 0%, #a8b8ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:20px;
-margin-top:25px;
-}
+        h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-.iconBox{
-background:rgba(0,0,0,0.3);
-padding:15px;
-border-radius:15px;
-cursor:pointer;
-transition:0.3s;
-}
+        /* Input Fields */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
 
-.iconBox:hover{
-transform:scale(1.1);
-}
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 18px;
+            transition: color 0.3s;
+        }
 
-/* Inputs */
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            font-size: 15px;
+            color: #fff;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
 
-input{
-width:100%;
-padding:12px;
-margin:8px 0;
-border:none;
-border-radius:10px;
-}
+        .input-group input:focus {
+            outline: none;
+            border-color: #6b8cff;
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 4px rgba(107, 140, 255, 0.15);
+        }
 
-/* Button */
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 300;
+        }
 
-button{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-background:#00e5ff;
-font-weight:bold;
-cursor:pointer;
-}
+        .input-group:focus-within i {
+            color: #6b8cff;
+        }
 
-/* Modal */
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 12px;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
 
-.modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.8);
-justify-content:center;
-align-items:center;
-animation: fadeIn 0.4s;
-}
+        .btn-primary {
+            background: linear-gradient(135deg, #6b8cff 0%, #4a6bff 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(107, 140, 255, 0.3);
+        }
 
-.modalContent{
-background:#111;
-padding:25px;
-border-radius:20px;
-width:350px;
-max-height:80vh;
-overflow:auto;
-}
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(107, 140, 255, 0.4);
+        }
 
-.hidden{display:none}
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
 
-/* Animation */
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
 
-@keyframes fadeIn{
-from{opacity:0; transform:translateY(20px)}
-to{opacity:1; transform:translateY(0)}
-}
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            margin-top: 10px;
+        }
 
-</style>
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Message */
+        .message {
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-size: 14px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            animation: fadeIn 0.3s;
+        }
+
+        /* Grid for Apps */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .app-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            color: white;
+        }
+
+        .app-item:hover {
+            transform: translateY(-5px);
+            background: rgba(107, 140, 255, 0.2);
+            border-color: #6b8cff;
+            box-shadow: 0 10px 30px rgba(107, 140, 255, 0.3);
+        }
+
+        .app-item i {
+            font-size: 32px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .app-item span {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: rgba(20, 20, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: scaleIn 0.3s;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Account Items */
+        .account-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 15px;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .account-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #6b8cff;
+        }
+
+        .account-item .email {
+            color: #6b8cff;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        .account-item .password {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-family: monospace;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: none;
+            color: #6b8cff;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(107, 140, 255, 0.2);
+        }
+
+        /* Security Indicator */
+        .security-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .security-indicator i {
+            color: #4CAF50;
+        }
+
+        /* Hidden Class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(107, 140, 255, 0.5);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(107, 140, 255, 0.8);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            z-index: 2000;
+            animation: slideInRight 0.3s;
+            border-left: 4px solid #6b8cff;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- LOGIN BOX -->
-<div class="card" id="loginBox">
-
-<h2>🔐 Social Vault</h2>
-
-<input id="email" placeholder="Email">
-<input id="password" placeholder="Password">
-<input id="pin" placeholder="Master PIN">
-
-<button onclick="signup()">Create Account</button>
-<button onclick="login()">Login</button>
-
-<p id="msg"></p>
-
-</div>
-
-<!-- DASHBOARD -->
-<div class="card hidden" id="dashboard">
-
-<h2>🌐 Social Accounts</h2>
-
-<div class="grid">
-
-<div class="iconBox" onclick="openApp('Facebook')">📘<br>Facebook</div>
-<div class="iconBox" onclick="openApp('Instagram')">📸<br>Instagram</div>
-<div class="iconBox" onclick="openApp('Google')">🔍<br>Google</div>
-<div class="iconBox" onclick="openApp('TikTok')">🎵<br>TikTok</div>
-<div class="iconBox" onclick="openApp('Twitter')">🐦<br>Twitter</div>
-<div class="iconBox" onclick="openApp('Other')">➕<br>Add More</div>
-
-</div>
-
-<button onclick="logout()">Logout</button>
-
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-<div class="modalContent">
-
-<h3 id="appTitle"></h3>
-
-<input id="accEmail" placeholder="Email / Username">
-<input id="accPass" placeholder="Password">
-
-<button onclick="saveAccount()">Add Account</button>
-
-<div id="accountList"></div>
-
-<button onclick="closeModal()">Close</button>
-
-</div>
-</div>
-
-<script>
-
-/* STORAGE */
-
-let currentApp="";
-
-/* Signup */
-
-function signup(){
-
-let email=document.getElementById("email").value;
-let password=document.getElementById("password").value;
-let pin=document.getElementById("pin").value;
-
-let users=JSON.parse(localStorage.getItem("users")||"{}");
-
-if(users[email]){
-alert("User Exists");
-return;
-}
-
-users[email]={
-password:CryptoJS.AES.encrypt(password,pin).toString(),
-pin:pin,
-vault:{}
-};
-
-localStorage.setItem("users",JSON.stringify(users));
-
-alert("Account Created ✅");
-}
-
-/* Login */
-
-function login(){
-
-let email=document.getElementById("email").value;
-let password=document.getElementById("password").value;
-let pin=document.getElementById("pin").value;
-
-let users=JSON.parse(localStorage.getItem("users")||"{}");
-
-if(!users[email]) return alert("User Not Found");
-
-let decrypt=CryptoJS.AES.decrypt(
-users[email].password,
-pin
-).toString(CryptoJS.enc.Utf8);
-
-if(decrypt===password){
-
-localStorage.setItem("active_user",email);
-localStorage.setItem("vault_pin",pin);
-
-document.getElementById("loginBox").classList.add("hidden");
-document.getElementById("dashboard").classList.remove("hidden");
-
-}else alert("Wrong Credentials");
-
-}
-
-/* Dashboard */
-
-function openApp(app){
-
-currentApp=app;
-
-document.getElementById("appTitle").innerText=app+" Vault";
-
-document.getElementById("modal").style.display="flex";
-
-loadAccounts();
-
-}
-
-/* Save Account */
-
-function saveAccount(){
-
-let email=document.getElementById("accEmail").value;
-let pass=document.getElementById("accPass").value;
-
-let users=JSON.parse(localStorage.getItem("users")||"{}");
-
-let user=localStorage.getItem("active_user");
-let pin=localStorage.getItem("vault_pin");
-
-let encPass=CryptoJS.AES.encrypt(pass,pin).toString();
-
-if(!users[user].vault[currentApp]){
-users[user].vault[currentApp]=[];
-}
-
-users[user].vault[currentApp].push({
-email:email,
-password:encPass
-});
-
-localStorage.setItem("users",JSON.stringify(users));
-
-alert("Saved ✅");
-
-loadAccounts();
-}
-
-/* Load Accounts */
-
-function loadAccounts(){
-
-let list=document.getElementById("accountList");
-list.innerHTML="";
-
-let users=JSON.parse(localStorage.getItem("users")||"{}");
-
-let user=localStorage.getItem("active_user");
-let pin=localStorage.getItem("vault_pin");
-
-let vault=users[user].vault[currentApp] || [];
-
-vault.forEach(item=>{
-
-let pass=CryptoJS.AES.decrypt(
-item.password,
-pin
-).toString(CryptoJS.enc.Utf8);
-
-list.innerHTML+=`
-<div style="background:#222;padding:10px;margin-top:10px;border-radius:10px">
-📧 ${item.email}<br>
-🔑 ${pass}
-</div>
-`;
-
-});
-
-}
-
-/* Modal Controls */
-
-function closeModal(){
-document.getElementById("modal").style.display="none";
-}
-
-function logout(){
-localStorage.removeItem("active_user");
-location.reload();
-}
-
-/* Auto Login */
-
-if(localStorage.getItem("active_user")){
-document.getElementById("loginBox").classList.add("hidden");
-document.getElementById("dashboard").classList.remove("hidden");
-}
-
-</script>
-
+    <div class="container">
+        <!-- LOGIN SECTION -->
+        <div class="glass-card" id="loginBox">
+            <h2><i class="fas fa-shield-alt"></i> Secure Vault Pro</h2>
+            
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" placeholder="Email address" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Password" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-key"></i>
+                <input type="password" id="pin" placeholder="Master PIN (4-6 digits)" pattern="[0-9]{4,6}" maxlength="6">
+            </div>
+
+            <button class="btn btn-primary" onclick="signup()">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+            
+            <button class="btn btn-secondary" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+
+            <div id="msg" class="message hidden"></div>
+
+            <div class="security-indicator">
+                <i class="fas fa-check-circle"></i>
+                <span>256-bit AES Encryption</span>
+            </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div class="glass-card hidden" id="dashboard">
+            <h2><i class="fas fa-vault"></i> My Vault</h2>
+
+            <div class="app-grid">
+                <div class="app-item" onclick="openApp('Facebook')">
+                    <i class="fab fa-facebook"></i>
+                    <span>Facebook</span>
+                </div>
+                <div class="app-item" onclick="openApp('Instagram')">
+                    <i class="fab fa-instagram"></i>
+                    <span>Instagram</span>
+                </div>
+                <div class="app-item" onclick="openApp('Google')">
+                    <i class="fab fa-google"></i>
+                    <span>Google</span>
+                </div>
+                <div class="app-item" onclick="openApp('TikTok')">
+                    <i class="fab fa-tiktok"></i>
+                    <span>TikTok</span>
+                </div>
+                <div class="app-item" onclick="openApp('Twitter')">
+                    <i class="fab fa-twitter"></i>
+                    <span>Twitter</span>
+                </div>
+                <div class="app-item" onclick="openApp('Other')">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add More</span>
+                </div>
+            </div>
+
+            <button class="btn btn-outline" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Secure Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h3 id="appTitle"><i class="fas fa-folder-open"></i> App Vault</h3>
+            
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="email" id="accEmail" placeholder="Email / Username">
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="accPass" placeholder="Password">
+            </div>
+
+            <button class="btn btn-primary" onclick="saveAccount()">
+                <i class="fas fa-save"></i> Add Account
+            </button>
+
+            <div id="accountList" style="margin-top: 20px;"></div>
+
+            <button class="btn btn-outline" onclick="closeModal()">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Show message function
+        function showMessage(text, isError = false) {
+            const msg = document.getElementById('msg');
+            msg.textContent = text;
+            msg.style.background = isError ? 'rgba(255, 87, 87, 0.2)' : 'rgba(76, 175, 80, 0.2)';
+            msg.style.borderLeft = isError ? '4px solid #ff5757' : '4px solid #4CAF50';
+            msg.classList.remove('hidden');
+            
+            setTimeout(() => {
+                msg.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}" style="color: ${type === 'success' ? '#4CAF50' : '#ff5757'}; margin-right: 10px;"></i>${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Add loading state to button
+        function setButtonLoading(button, isLoading) {
+            if (isLoading) {
+                button.disabled = true;
+                button.innerHTML = '<span class="loading"></span> Processing...';
+            } else {
+                button.disabled = false;
+            }
+        }
+
+        // Signup function
+        function signup() {
+            let email = document.getElementById("email").value.trim();
+            let password = document.getElementById("password").value;
+            let pin = document.getElementById("pin").value;
+
+            if (!email || !password || !pin) {
+                showMessage("All fields are required", true);
+                return;
+            }
+
+            if (pin.length < 4 || pin.length > 6 || !/^\d+$/.test(pin)) {
+                showMessage("PIN must be 4-6 digits", true);
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+            if (users[email]) {
+                showMessage("User already exists", true);
+                return;
+            }
+
+            users[email] = {
+                password: CryptoJS.AES.encrypt(password, pin).toString(),
+                pin: pin,
+                vault: {}
+            };
+
+            localStorage.setItem("users", JSON.stringify(users));
+            showToast("Account created successfully!");
+            showMessage("Account created! Please login.");
+            
+            // Clear fields
+            document.getElementById("email").value = email;
+            document.getElementById("password").value = "";
+            document.getElementById("pin").value = "";
+        }
+
+        // Login function
+        function login() {
+            let email = document.getElementById("email").value.trim();
+            let password = document.getElementById("password").value;
+            let pin = document.getElementById("pin").value;
+
+            let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+            if (!users[email]) {
+                showMessage("User not found", true);
+                return;
+            }
+
+            try {
+                let decrypt = CryptoJS.AES.decrypt(users[email].password, pin).toString(CryptoJS.enc.Utf8);
+
+                if (decrypt === password) {
+                    localStorage.setItem("active_user", email);
+                    localStorage.setItem("vault_pin", pin);
+                    
+                    document.getElementById("loginBox").classList.add("hidden");
+                    document.getElementById("dashboard").classList.remove("hidden");
+                    
+                    showToast("Welcome back, " + email.split('@')[0] + "!");
+                } else {
+                    showMessage("Invalid credentials", true);
+                }
+            } catch (e) {
+                showMessage("Decryption failed", true);
+            }
+        }
+
+        // Current app
+        let currentApp = "";
+
+        // Open app function
+        function openApp(app) {
+            currentApp = app;
+            document.getElementById("appTitle").innerHTML = `<i class="fas ${getAppIcon(app)}"></i> ${app} Vault`;
+            document.getElementById("modal").style.display = "flex";
+            loadAccounts();
+        }
+
+        // Get app icon
+        function getAppIcon(app) {
+            const icons = {
+                'Facebook': 'fa-facebook',
+                'Instagram': 'fa-instagram',
+                'Google': 'fa-google',
+                'TikTok': 'fa-tiktok',
+                'Twitter': 'fa-twitter',
+                'Other': 'fa-plus-circle'
+            };
+            return icons[app] || 'fa-folder';
+        }
+
+        // Save account function
+        function saveAccount() {
+            let email = document.getElementById("accEmail").value.trim();
+            let pass = document.getElementById("accPass").value;
+
+            if (!email || !pass) {
+                showToast("All fields are required", 'error');
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem("users") || "{}");
+            let user = localStorage.getItem("active_user");
+            let pin = localStorage.getItem("vault_pin");
+
+            let encPass = CryptoJS.AES.encrypt(pass, pin).toString();
+
+            if (!users[user].vault[currentApp]) {
+                users[user].vault[currentApp] = [];
+            }
+
+            users[user].vault[currentApp].push({
+                email: email,
+                password: encPass
+            });
+
+            localStorage.setItem("users", JSON.stringify(users));
+            
+            // Clear inputs
+            document.getElementById("accEmail").value = "";
+            document.getElementById("accPass").value = "";
+            
+            showToast("Account saved securely!");
+            loadAccounts();
+        }
+
+        // Load accounts function
+        function loadAccounts() {
+            let list = document.getElementById("accountList");
+            list.innerHTML = "";
+
+            let users = JSON.parse(localStorage.getItem("users") || "{}");
+            let user = localStorage.getItem("active_user");
+            let pin = localStorage.getItem("vault_pin");
+
+            let vault = users[user].vault[currentApp] || [];
+
+            if (vault.length === 0) {
+                list.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.5); padding: 20px;">No accounts saved yet</div>';
+                return;
+            }
+
+            vault.forEach((item, index) => {
+                try {
+                    let pass = CryptoJS.AES.decrypt(item.password, pin).toString(CryptoJS.enc.Utf8);
+                    
+                    list.innerHTML += `
+                        <div class="account-item">
+                            <div class="email">
+                                <i class="fas fa-envelope" style="margin-right: 5px;"></i>
+                                ${item.email}
+                            </div>
+                            <div class="password">
+                                <span>${'•'.repeat(pass.length)}</span>
+                                <button class="copy-btn" onclick="copyPassword('${index}')" title="Click to reveal">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div style="display: none;" id="pass-${index}">${pass}</div>
+                        </div>
+                    `;
+                } catch (e) {
+                    console.error('Error decrypting password');
+                }
+            });
+        }
+
+        // Copy password function
+        function copyPassword(index) {
+            let passDiv = document.getElementById(`pass-${index}`);
+            if (passDiv) {
+                let password = passDiv.textContent;
+                navigator.clipboard.writeText(password).then(() => {
+                    showToast("Password copied to clipboard!");
+                    
+                    // Show password briefly
+                    let btn = event.target.closest('.copy-btn');
+                    btn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-eye"></i>';
+                    }, 1500);
+                });
+            }
+        }
+
+        // Close modal function
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("active_user");
+            localStorage.removeItem("vault_pin");
+            showToast("Logged out successfully");
+            location.reload();
+        }
+
+        // Auto login check
+        if (localStorage.getItem("active_user")) {
+            document.getElementById("loginBox").classList.add("hidden");
+            document.getElementById("dashboard").classList.remove("hidden");
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            let modal = document.getElementById("modal");
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Add keyboard support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('modal').style.display === 'flex') {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>
