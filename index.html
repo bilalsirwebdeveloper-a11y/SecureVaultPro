@@ -183,18 +183,28 @@
             transform: translateY(-2px);
         }
 
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         .btn-link {
             background: transparent;
             color: #6b8cff;
             border: none;
             font-size: 14px;
             margin-top: 10px;
+            cursor: pointer;
         }
 
         .btn-link:hover {
             text-decoration: underline;
-            transform: none;
-            box-shadow: none;
         }
 
         /* Message */
@@ -209,14 +219,42 @@
             animation: fadeIn 0.3s;
         }
 
-        /* Grid for Apps */
+        /* Scrollable Grid for Apps */
+        .app-grid-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 25px 0;
+            padding-right: 5px;
+            scrollbar-width: thin;
+            scrollbar-color: #6b8cff rgba(255,255,255,0.1);
+        }
+
         .app-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            margin: 25px 0;
         }
 
+        /* Custom Scrollbar */
+        .app-grid-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .app-grid-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .app-grid-container::-webkit-scrollbar-thumb {
+            background: #6b8cff;
+            border-radius: 10px;
+        }
+
+        .app-grid-container::-webkit-scrollbar-thumb:hover {
+            background: #4a6bff;
+        }
+
+        /* App Items with Brand Colors */
         .app-item {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -229,10 +267,8 @@
         }
 
         .app-item:hover {
-            transform: translateY(-5px);
-            background: rgba(107, 140, 255, 0.2);
-            border-color: #6b8cff;
-            box-shadow: 0 10px 30px rgba(107, 140, 255, 0.3);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
         .app-item i {
@@ -245,6 +281,21 @@
             font-size: 14px;
             font-weight: 500;
         }
+
+        /* Brand Colors */
+        .app-item[data-app="Facebook"] i { color: #1877f2; }
+        .app-item[data-app="Instagram"] i { color: #e4405f; }
+        .app-item[data-app="Google"] i { color: #ea4335; }
+        .app-item[data-app="TikTok"] i { color: #69c9d0; text-shadow: 2px 2px 0 #ff0050; }
+        .app-item[data-app="Twitter"] i { color: #1da1f2; }
+        .app-item[data-app="LinkedIn"] i { color: #0a66c2; }
+        .app-item[data-app="Snapchat"] i { color: #fffc00; text-shadow: 0 0 5px rgba(255,252,0,0.5); }
+        .app-item[data-app="Pinterest"] i { color: #bd081c; }
+        .app-item[data-app="Reddit"] i { color: #ff4500; }
+        .app-item[data-app="WhatsApp"] i { color: #25d366; }
+        .app-item[data-app="Telegram"] i { color: #0088cc; }
+        .app-item[data-app="YouTube"] i { color: #ff0000; }
+        .app-item[data-app="Other"] i { color: #6b8cff; }
 
         /* Modal */
         .modal {
@@ -357,38 +408,16 @@
             display: none !important;
         }
 
-        /* Toggle Buttons */
-        .toggle-buttons {
+        /* Auth Buttons Container */
+        .auth-buttons {
             display: flex;
             gap: 10px;
-            margin-bottom: 25px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 5px;
-            border-radius: 50px;
+            margin-top: 20px;
         }
 
-        .toggle-btn {
+        .auth-buttons .btn {
             flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .toggle-btn.active {
-            background: linear-gradient(135deg, #6b8cff 0%, #4a6bff 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(107, 140, 255, 0.3);
-        }
-
-        /* Form Container */
-        .form-container {
-            transition: all 0.3s ease;
+            margin-bottom: 0;
         }
 
         /* Welcome Text */
@@ -397,31 +426,6 @@
             margin-bottom: 20px;
             color: rgba(255, 255, 255, 0.8);
             font-size: 14px;
-        }
-
-        .welcome-text i {
-            color: #6b8cff;
-            margin-right: 5px;
-        }
-
-        /* Divider */
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 20px 0;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .divider span {
-            padding: 0 10px;
         }
 
         /* Scrollbar */
@@ -494,6 +498,29 @@
                 opacity: 0;
             }
         }
+
+        /* Divider */
+        .divider {
+            position: relative;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .divider hr {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0 10px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
@@ -503,53 +530,39 @@
         <div class="glass-card" id="authBox">
             <h2><i class="fas fa-shield-alt"></i> Secure Vault Pro</h2>
             
-            <!-- Toggle Buttons -->
-            <div class="toggle-buttons">
-                <button class="toggle-btn active" id="loginTabBtn" onclick="showLoginForm()">
+            <!-- Welcome Text -->
+            <div class="welcome-text" id="welcomeText">
+                <i class="fas fa-lock"></i> Enter your email & password to access vault
+            </div>
+
+            <!-- Login Fields (Only Email & Password) -->
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="loginEmail" placeholder="Email address" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
+            </div>
+
+            <!-- Auth Buttons (Login & Create Account) -->
+            <div class="auth-buttons">
+                <button class="btn btn-primary" onclick="login()">
                     <i class="fas fa-sign-in-alt"></i> Login
                 </button>
-                <button class="toggle-btn" id="registerTabBtn" onclick="showRegisterForm()">
+                <button class="btn btn-secondary" onclick="showRegisterForm()">
                     <i class="fas fa-user-plus"></i> Create Account
                 </button>
             </div>
 
-            <!-- Welcome Text -->
-            <div class="welcome-text" id="welcomeText">
-                <i class="fas fa-lock"></i> Welcome back! Please login to continue
-            </div>
-
-            <!-- LOGIN FORM -->
-            <div id="loginForm" class="form-container">
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="loginEmail" placeholder="Email address" autocomplete="off">
-                </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
-                </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-key"></i>
-                    <input type="password" id="loginPin" placeholder="Master PIN (4-6 digits)" pattern="[0-9]{4,6}" maxlength="6">
-                </div>
-
-                <button class="btn btn-primary" onclick="login()">
-                    <i class="fas fa-sign-in-alt"></i> Login to Vault
-                </button>
-
+            <!-- Register Form (Hidden by default) -->
+            <div id="registerForm" class="hidden">
                 <div class="divider">
-                    <span>OR</span>
+                    <hr>
+                    <span>NEW ACCOUNT</span>
                 </div>
 
-                <button class="btn btn-link" onclick="showRegisterForm()">
-                    Don't have an account? Create one
-                </button>
-            </div>
-
-            <!-- REGISTER FORM -->
-            <div id="registerForm" class="form-container hidden">
                 <div class="input-group">
                     <i class="fas fa-envelope"></i>
                     <input type="email" id="regEmail" placeholder="Email address" autocomplete="off">
@@ -559,27 +572,13 @@
                     <i class="fas fa-lock"></i>
                     <input type="password" id="regPassword" placeholder="Password" autocomplete="off">
                 </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-key"></i>
-                    <input type="password" id="regPin" placeholder="Master PIN (4-6 digits)" pattern="[0-9]{4,6}" maxlength="6">
-                </div>
-
-                <div class="input-group">
-                    <i class="fas fa-key"></i>
-                    <input type="password" id="regConfirmPin" placeholder="Confirm Master PIN" pattern="[0-9]{4,6}" maxlength="6">
-                </div>
 
                 <button class="btn btn-primary" onclick="signup()">
                     <i class="fas fa-user-plus"></i> Create Account
                 </button>
 
-                <div class="divider">
-                    <span>OR</span>
-                </div>
-
-                <button class="btn btn-link" onclick="showLoginForm()">
-                    Already have an account? Login
+                <button class="btn btn-link" onclick="hideRegisterForm()">
+                    <i class="fas fa-arrow-left"></i> Back to Login
                 </button>
             </div>
 
@@ -595,30 +594,61 @@
         <div class="glass-card hidden" id="dashboard">
             <h2><i class="fas fa-vault"></i> My Vault</h2>
 
-            <div class="app-grid">
-                <div class="app-item" onclick="openApp('Facebook')">
-                    <i class="fab fa-facebook"></i>
-                    <span>Facebook</span>
-                </div>
-                <div class="app-item" onclick="openApp('Instagram')">
-                    <i class="fab fa-instagram"></i>
-                    <span>Instagram</span>
-                </div>
-                <div class="app-item" onclick="openApp('Google')">
-                    <i class="fab fa-google"></i>
-                    <span>Google</span>
-                </div>
-                <div class="app-item" onclick="openApp('TikTok')">
-                    <i class="fab fa-tiktok"></i>
-                    <span>TikTok</span>
-                </div>
-                <div class="app-item" onclick="openApp('Twitter')">
-                    <i class="fab fa-twitter"></i>
-                    <span>Twitter</span>
-                </div>
-                <div class="app-item" onclick="openApp('Other')">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>Add More</span>
+            <!-- Scrollable App Grid -->
+            <div class="app-grid-container">
+                <div class="app-grid">
+                    <div class="app-item" data-app="Facebook" onclick="openApp('Facebook')">
+                        <i class="fab fa-facebook"></i>
+                        <span>Facebook</span>
+                    </div>
+                    <div class="app-item" data-app="Instagram" onclick="openApp('Instagram')">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </div>
+                    <div class="app-item" data-app="Google" onclick="openApp('Google')">
+                        <i class="fab fa-google"></i>
+                        <span>Google</span>
+                    </div>
+                    <div class="app-item" data-app="TikTok" onclick="openApp('TikTok')">
+                        <i class="fab fa-tiktok"></i>
+                        <span>TikTok</span>
+                    </div>
+                    <div class="app-item" data-app="Twitter" onclick="openApp('Twitter')">
+                        <i class="fab fa-twitter"></i>
+                        <span>Twitter</span>
+                    </div>
+                    <div class="app-item" data-app="LinkedIn" onclick="openApp('LinkedIn')">
+                        <i class="fab fa-linkedin"></i>
+                        <span>LinkedIn</span>
+                    </div>
+                    <div class="app-item" data-app="Snapchat" onclick="openApp('Snapchat')">
+                        <i class="fab fa-snapchat"></i>
+                        <span>Snapchat</span>
+                    </div>
+                    <div class="app-item" data-app="Pinterest" onclick="openApp('Pinterest')">
+                        <i class="fab fa-pinterest"></i>
+                        <span>Pinterest</span>
+                    </div>
+                    <div class="app-item" data-app="Reddit" onclick="openApp('Reddit')">
+                        <i class="fab fa-reddit"></i>
+                        <span>Reddit</span>
+                    </div>
+                    <div class="app-item" data-app="WhatsApp" onclick="openApp('WhatsApp')">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </div>
+                    <div class="app-item" data-app="Telegram" onclick="openApp('Telegram')">
+                        <i class="fab fa-telegram"></i>
+                        <span>Telegram</span>
+                    </div>
+                    <div class="app-item" data-app="YouTube" onclick="openApp('YouTube')">
+                        <i class="fab fa-youtube"></i>
+                        <span>YouTube</span>
+                    </div>
+                    <div class="app-item" data-app="Other" onclick="openApp('Other')">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Add More</span>
+                    </div>
                 </div>
             </div>
 
@@ -682,54 +712,29 @@
             }, 3000);
         }
 
-        // Show Login Form
-        function showLoginForm() {
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('registerForm').classList.add('hidden');
-            document.getElementById('loginTabBtn').classList.add('active');
-            document.getElementById('registerTabBtn').classList.remove('active');
-            document.getElementById('welcomeText').innerHTML = '<i class="fas fa-lock"></i> Welcome back! Please login to continue';
-            
-            // Clear fields
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPassword').value = '';
-            document.getElementById('loginPin').value = '';
-        }
-
         // Show Register Form
         function showRegisterForm() {
             document.getElementById('registerForm').classList.remove('hidden');
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registerTabBtn').classList.add('active');
-            document.getElementById('loginTabBtn').classList.remove('active');
             document.getElementById('welcomeText').innerHTML = '<i class="fas fa-user-plus"></i> Create your secure vault';
             
-            // Clear fields
+            // Clear register fields
             document.getElementById('regEmail').value = '';
             document.getElementById('regPassword').value = '';
-            document.getElementById('regPin').value = '';
-            document.getElementById('regConfirmPin').value = '';
         }
 
-        // Signup function
+        // Hide Register Form
+        function hideRegisterForm() {
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('welcomeText').innerHTML = '<i class="fas fa-lock"></i> Enter your email & password to access vault';
+        }
+
+        // Signup function (No PIN now)
         function signup() {
             let email = document.getElementById("regEmail").value.trim();
             let password = document.getElementById("regPassword").value;
-            let pin = document.getElementById("regPin").value;
-            let confirmPin = document.getElementById("regConfirmPin").value;
 
-            if (!email || !password || !pin || !confirmPin) {
+            if (!email || !password) {
                 showMessage("All fields are required", true);
-                return;
-            }
-
-            if (pin.length < 4 || pin.length > 6 || !/^\d+$/.test(pin)) {
-                showMessage("PIN must be 4-6 digits", true);
-                return;
-            }
-
-            if (pin !== confirmPin) {
-                showMessage("PINs do not match", true);
                 return;
             }
 
@@ -740,9 +745,9 @@
                 return;
             }
 
+            // Simple encryption without PIN
             users[email] = {
-                password: CryptoJS.AES.encrypt(password, pin).toString(),
-                pin: pin,
+                password: CryptoJS.AES.encrypt(password, "vault-secret-key-2024").toString(),
                 vault: {}
             };
 
@@ -750,20 +755,18 @@
             showToast("Account created successfully!");
             showMessage("Account created! Please login.");
             
-            // Switch to login form
-            showLoginForm();
-            
-            // Pre-fill email
+            // Hide register form and pre-fill email
+            hideRegisterForm();
             document.getElementById("loginEmail").value = email;
+            document.getElementById("loginPassword").value = "";
         }
 
-        // Login function
+        // Login function (No PIN now)
         function login() {
             let email = document.getElementById("loginEmail").value.trim();
             let password = document.getElementById("loginPassword").value;
-            let pin = document.getElementById("loginPin").value;
 
-            if (!email || !password || !pin) {
+            if (!email || !password) {
                 showMessage("All fields are required", true);
                 return;
             }
@@ -776,21 +779,20 @@
             }
 
             try {
-                let decrypt = CryptoJS.AES.decrypt(users[email].password, pin).toString(CryptoJS.enc.Utf8);
+                let decrypt = CryptoJS.AES.decrypt(users[email].password, "vault-secret-key-2024").toString(CryptoJS.enc.Utf8);
 
                 if (decrypt === password) {
                     localStorage.setItem("active_user", email);
-                    localStorage.setItem("vault_pin", pin);
                     
                     document.getElementById("authBox").classList.add("hidden");
                     document.getElementById("dashboard").classList.remove("hidden");
                     
                     showToast("Welcome back, " + email.split('@')[0] + "!");
                 } else {
-                    showMessage("Invalid credentials", true);
+                    showMessage("Invalid password", true);
                 }
             } catch (e) {
-                showMessage("Decryption failed", true);
+                showMessage("Login failed", true);
             }
         }
 
@@ -800,7 +802,7 @@
         // Open app function
         function openApp(app) {
             currentApp = app;
-            document.getElementById("appTitle").innerHTML = `<i class="fas ${getAppIcon(app)}"></i> ${app} Vault`;
+            document.getElementById("appTitle").innerHTML = `<i class="fab ${getAppIcon(app)}"></i> ${app} Vault`;
             document.getElementById("modal").style.display = "flex";
             loadAccounts();
         }
@@ -813,6 +815,13 @@
                 'Google': 'fa-google',
                 'TikTok': 'fa-tiktok',
                 'Twitter': 'fa-twitter',
+                'LinkedIn': 'fa-linkedin',
+                'Snapchat': 'fa-snapchat',
+                'Pinterest': 'fa-pinterest',
+                'Reddit': 'fa-reddit',
+                'WhatsApp': 'fa-whatsapp',
+                'Telegram': 'fa-telegram',
+                'YouTube': 'fa-youtube',
                 'Other': 'fa-plus-circle'
             };
             return icons[app] || 'fa-folder';
@@ -830,9 +839,9 @@
 
             let users = JSON.parse(localStorage.getItem("users") || "{}");
             let user = localStorage.getItem("active_user");
-            let pin = localStorage.getItem("vault_pin");
 
-            let encPass = CryptoJS.AES.encrypt(pass, pin).toString();
+            // Encrypt with same secret key
+            let encPass = CryptoJS.AES.encrypt(pass, "vault-secret-key-2024").toString();
 
             if (!users[user].vault[currentApp]) {
                 users[user].vault[currentApp] = [];
@@ -860,7 +869,6 @@
 
             let users = JSON.parse(localStorage.getItem("users") || "{}");
             let user = localStorage.getItem("active_user");
-            let pin = localStorage.getItem("vault_pin");
 
             if (!user || !users[user]) return;
 
@@ -873,7 +881,7 @@
 
             vault.forEach((item, index) => {
                 try {
-                    let pass = CryptoJS.AES.decrypt(item.password, pin).toString(CryptoJS.enc.Utf8);
+                    let pass = CryptoJS.AES.decrypt(item.password, "vault-secret-key-2024").toString(CryptoJS.enc.Utf8);
                     
                     list.innerHTML += `
                         <div class="account-item">
@@ -922,12 +930,15 @@
         // Logout function
         function logout() {
             localStorage.removeItem("active_user");
-            localStorage.removeItem("vault_pin");
             showToast("Logged out successfully");
             
             document.getElementById("dashboard").classList.add("hidden");
             document.getElementById("authBox").classList.remove("hidden");
-            showLoginForm();
+            hideRegisterForm();
+            
+            // Clear login fields
+            document.getElementById("loginEmail").value = "";
+            document.getElementById("loginPassword").value = "";
         }
 
         // Auto login check
