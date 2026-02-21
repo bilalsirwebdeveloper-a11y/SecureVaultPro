@@ -183,15 +183,18 @@
             transform: translateY(-2px);
         }
 
-        .btn-outline {
+        .btn-link {
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
+            color: #6b8cff;
+            border: none;
+            font-size: 14px;
             margin-top: 10px;
         }
 
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
+        .btn-link:hover {
+            text-decoration: underline;
+            transform: none;
+            box-shadow: none;
         }
 
         /* Message */
@@ -354,6 +357,73 @@
             display: none !important;
         }
 
+        /* Toggle Buttons */
+        .toggle-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px;
+            border-radius: 50px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #6b8cff 0%, #4a6bff 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(107, 140, 255, 0.3);
+        }
+
+        /* Form Container */
+        .form-container {
+            transition: all 0.3s ease;
+        }
+
+        /* Welcome Text */
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .welcome-text i {
+            color: #6b8cff;
+            margin-right: 5px;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            padding: 0 10px;
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -413,37 +483,105 @@
                 opacity: 1;
             }
         }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- LOGIN SECTION -->
-        <div class="glass-card" id="loginBox">
+        <!-- LOGIN/REGISTER SECTION -->
+        <div class="glass-card" id="authBox">
             <h2><i class="fas fa-shield-alt"></i> Secure Vault Pro</h2>
             
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="email" placeholder="Email address" autocomplete="off">
-            </div>
-            
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="password" placeholder="Password" autocomplete="off">
-            </div>
-            
-            <div class="input-group">
-                <i class="fas fa-key"></i>
-                <input type="password" id="pin" placeholder="Master PIN (4-6 digits)" pattern="[0-9]{4,6}" maxlength="6">
+            <!-- Toggle Buttons -->
+            <div class="toggle-buttons">
+                <button class="toggle-btn active" id="loginTabBtn" onclick="showLoginForm()">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button class="toggle-btn" id="registerTabBtn" onclick="showRegisterForm()">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
             </div>
 
-            <button class="btn btn-primary" onclick="signup()">
-                <i class="fas fa-user-plus"></i> Create Account
-            </button>
-            
-            <button class="btn btn-secondary" onclick="login()">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </button>
+            <!-- Welcome Text -->
+            <div class="welcome-text" id="welcomeText">
+                <i class="fas fa-lock"></i> Welcome back! Please login to continue
+            </div>
+
+            <!-- LOGIN FORM -->
+            <div id="loginForm" class="form-container">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" placeholder="Email address" autocomplete="off">
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="password" id="loginPin" placeholder="Master PIN (4-6 digits)" pattern="[0-9]{4,6}" maxlength="6">
+                </div>
+
+                <button class="btn btn-primary" onclick="login()">
+                    <i class="fas fa-sign-in-alt"></i> Login to Vault
+                </button>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <button class="btn btn-link" onclick="showRegisterForm()">
+                    Don't have an account? Create one
+                </button>
+            </div>
+
+            <!-- REGISTER FORM -->
+            <div id="registerForm" class="form-container hidden">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="regEmail" placeholder="Email address" autocomplete="off">
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="regPassword" placeholder="Password" autocomplete="off">
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="password" id="regPin" placeholder="Master PIN (4-6 digits)" pattern="[0-9]{4,6}" maxlength="6">
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="password" id="regConfirmPin" placeholder="Confirm Master PIN" pattern="[0-9]{4,6}" maxlength="6">
+                </div>
+
+                <button class="btn btn-primary" onclick="signup()">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <button class="btn btn-link" onclick="showLoginForm()">
+                    Already have an account? Login
+                </button>
+            </div>
 
             <div id="msg" class="message hidden"></div>
 
@@ -544,29 +682,54 @@
             }, 3000);
         }
 
-        // Add loading state to button
-        function setButtonLoading(button, isLoading) {
-            if (isLoading) {
-                button.disabled = true;
-                button.innerHTML = '<span class="loading"></span> Processing...';
-            } else {
-                button.disabled = false;
-            }
+        // Show Login Form
+        function showLoginForm() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginTabBtn').classList.add('active');
+            document.getElementById('registerTabBtn').classList.remove('active');
+            document.getElementById('welcomeText').innerHTML = '<i class="fas fa-lock"></i> Welcome back! Please login to continue';
+            
+            // Clear fields
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginPin').value = '';
+        }
+
+        // Show Register Form
+        function showRegisterForm() {
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerTabBtn').classList.add('active');
+            document.getElementById('loginTabBtn').classList.remove('active');
+            document.getElementById('welcomeText').innerHTML = '<i class="fas fa-user-plus"></i> Create your secure vault';
+            
+            // Clear fields
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regPassword').value = '';
+            document.getElementById('regPin').value = '';
+            document.getElementById('regConfirmPin').value = '';
         }
 
         // Signup function
         function signup() {
-            let email = document.getElementById("email").value.trim();
-            let password = document.getElementById("password").value;
-            let pin = document.getElementById("pin").value;
+            let email = document.getElementById("regEmail").value.trim();
+            let password = document.getElementById("regPassword").value;
+            let pin = document.getElementById("regPin").value;
+            let confirmPin = document.getElementById("regConfirmPin").value;
 
-            if (!email || !password || !pin) {
+            if (!email || !password || !pin || !confirmPin) {
                 showMessage("All fields are required", true);
                 return;
             }
 
             if (pin.length < 4 || pin.length > 6 || !/^\d+$/.test(pin)) {
                 showMessage("PIN must be 4-6 digits", true);
+                return;
+            }
+
+            if (pin !== confirmPin) {
+                showMessage("PINs do not match", true);
                 return;
             }
 
@@ -587,17 +750,23 @@
             showToast("Account created successfully!");
             showMessage("Account created! Please login.");
             
-            // Clear fields
-            document.getElementById("email").value = email;
-            document.getElementById("password").value = "";
-            document.getElementById("pin").value = "";
+            // Switch to login form
+            showLoginForm();
+            
+            // Pre-fill email
+            document.getElementById("loginEmail").value = email;
         }
 
         // Login function
         function login() {
-            let email = document.getElementById("email").value.trim();
-            let password = document.getElementById("password").value;
-            let pin = document.getElementById("pin").value;
+            let email = document.getElementById("loginEmail").value.trim();
+            let password = document.getElementById("loginPassword").value;
+            let pin = document.getElementById("loginPin").value;
+
+            if (!email || !password || !pin) {
+                showMessage("All fields are required", true);
+                return;
+            }
 
             let users = JSON.parse(localStorage.getItem("users") || "{}");
 
@@ -613,7 +782,7 @@
                     localStorage.setItem("active_user", email);
                     localStorage.setItem("vault_pin", pin);
                     
-                    document.getElementById("loginBox").classList.add("hidden");
+                    document.getElementById("authBox").classList.add("hidden");
                     document.getElementById("dashboard").classList.remove("hidden");
                     
                     showToast("Welcome back, " + email.split('@')[0] + "!");
@@ -693,6 +862,8 @@
             let user = localStorage.getItem("active_user");
             let pin = localStorage.getItem("vault_pin");
 
+            if (!user || !users[user]) return;
+
             let vault = users[user].vault[currentApp] || [];
 
             if (vault.length === 0) {
@@ -753,12 +924,15 @@
             localStorage.removeItem("active_user");
             localStorage.removeItem("vault_pin");
             showToast("Logged out successfully");
-            location.reload();
+            
+            document.getElementById("dashboard").classList.add("hidden");
+            document.getElementById("authBox").classList.remove("hidden");
+            showLoginForm();
         }
 
         // Auto login check
         if (localStorage.getItem("active_user")) {
-            document.getElementById("loginBox").classList.add("hidden");
+            document.getElementById("authBox").classList.add("hidden");
             document.getElementById("dashboard").classList.remove("hidden");
         }
 
